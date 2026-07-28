@@ -15,7 +15,8 @@ public class SkillSO : ScriptableObject
 }
 
 public enum Modifier { 
-    health,
-    attack,
-    movement
+    healthUp,
+    attackUp,
+    movementUp,
+    timeUp
 }

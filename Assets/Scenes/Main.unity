@@ -175,7 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f55291b4c9206ed4e8e9f970b6db8541, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalSkillPoints: 0
+  totalSkillPoints: 10
 --- !u!224 &487793941 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7955299709132955011, guid: e0383bb11b4b5344a9f6bab35e483827, type: 3}
@@ -265,9 +265,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68e21793cbacd014d98cec46b8dcdb1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mvSpd: 0
-  atk: 0
-  hp: 0
+  mvSpd: 5
+  atk: 1
+  hp: 3
   rb: {fileID: 500462318}
 --- !u!1 &519420028
 GameObject:
@@ -630,6 +630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a6bba0fbab6420438f1f4d172409725, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  time: 0
 --- !u!1001 &1136898107
 PrefabInstance:
   m_ObjectHideFlags: 0

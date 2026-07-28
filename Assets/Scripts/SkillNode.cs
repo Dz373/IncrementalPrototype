@@ -16,12 +16,14 @@ public class SkillNode : MonoBehaviour
     [SerializeField] private TextMeshProUGUI skillLevelText;
     [SerializeField] private Image skillIcon;
     [SerializeField] private Button skillButton;
+    private SkillTreeManager skillManager;
 
     private void Start() {
         foreach (SkillNode skl in nodeUnlock) {
             skl.nodeRequired.Add(this);
             skl.UnlockNode();
         }
+        skillManager = FindFirstObjectByType<SkillTreeManager>();
     }
 
     private void OnValidate() {
@@ -44,11 +46,12 @@ public class SkillNode : MonoBehaviour
     }
 
     public void UpgradeSkill() {
-        if(!isLocked && currentLevel < skillSO.skillMaxLevel) {
+        if(!isLocked && currentLevel < skillSO.skillMaxLevel && skillManager.CanSpendSkillPoints(skillSO.skillCost)) {
             currentLevel++;
             UpdateUI();
 
-            FindFirstObjectByType<PlayerController>().UpdateStat(skillSO);
+            skillManager.UpdateStat(skillSO);
+            skillManager.totalSkillPoints -= skillSO.skillCost;
 
             if(IsUnlocked()) {
                 UnlockLinkedNodes();
