@@ -1,20 +1,27 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class SkillNode : MonoBehaviour
 {
     public int currentLevel;
-
     public SkillSO skillSO;
 
+    public bool isLocked;
+    public List<SkillNode> nodeUnlock;
+    public List<SkillNode> nodeRequired;
+
     [Header("Node Referenecs")]
-    [SerializeField] private Button skillButton;
     [SerializeField] private TextMeshProUGUI skillLevelText;
     [SerializeField] private Image skillIcon;
+    [SerializeField] private Button skillButton;
 
     private void Start() {
-        skillButton.onClick.AddListener(UpgradeSkill);
+        foreach (SkillNode skl in nodeUnlock) {
+            skl.nodeRequired.Add(this);
+            skl.UnlockNode();
+        }
     }
 
     private void OnValidate() {
@@ -26,14 +33,57 @@ public class SkillNode : MonoBehaviour
     private void UpdateUI() {
         skillIcon.sprite = skillSO.skillIcon;
 
-        skillLevelText.text = currentLevel.ToString() + "/" + skillSO.skillMaxLevel.ToString();
+        if (isLocked) {
+            skillLevelText.text = "Locked";
 
+            skillButton.interactable = false;
+        }
+        else {
+            skillLevelText.text = currentLevel.ToString() + "/" + skillSO.skillMaxLevel.ToString();
+
+            skillButton.interactable = true;
+        }
     }
 
     public void UpgradeSkill() {
-        if(currentLevel < skillSO.skillMaxLevel) {
+        if(!isLocked && currentLevel < skillSO.skillMaxLevel) {
             currentLevel++;
             UpdateUI();
+
+            if(IsUnlocked()) {
+                UnlockLinkedNodes();
+                skillButton.interactable = false;
+            }
         }
+    }
+
+    private void UnlockLinkedNodes() {
+        foreach (SkillNode skl in nodeUnlock) {
+            skl.UnlockNode();
+        }
+    }
+
+    private void UnlockNode() {
+        if (CheckLinkedNodes()) {
+            isLocked = false;
+            UpdateUI();
+        }
+        else {
+            isLocked = true;
+            UpdateUI();
+        }
+    }
+
+    public bool CheckLinkedNodes() {
+        foreach(SkillNode skl in nodeRequired) {
+            if (!skl.IsUnlocked())
+                return false;
+        }
+
+        return true;
+    }
+
+    public bool IsUnlocked() {
+        return currentLevel == skillSO.skillMaxLevel;
     }
 }
