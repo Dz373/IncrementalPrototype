@@ -12,7 +12,6 @@ public class SkillSO : ScriptableObject
     public int modifierAmount;
 
     public Sprite skillIcon;
-
 }
 
 public enum Modifier { 

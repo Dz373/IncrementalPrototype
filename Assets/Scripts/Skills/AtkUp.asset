@@ -10,9 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1edf5c882324728469d5b83f2e93ec06, type: 3}
-  m_Name: Skill1
+  m_Name: AtkUp
   m_EditorClassIdentifier: 
-  skillName: Skill1
-  skillMaxLevel: 3
+  skillName: AttackUp
+  skillMaxLevel: 5
   skillCost: 1
+  skillModifier: 1
+  modifierAmount: 1
   skillIcon: {fileID: 2394282579779259632, guid: 1095188c708d2ff4e8056940ca603176, type: 3}

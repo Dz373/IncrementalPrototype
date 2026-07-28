@@ -35,12 +35,10 @@ public class SkillNode : MonoBehaviour
 
         if (isLocked) {
             skillLevelText.text = "Locked";
-
             skillButton.interactable = false;
         }
         else {
             skillLevelText.text = currentLevel.ToString() + "/" + skillSO.skillMaxLevel.ToString();
-
             skillButton.interactable = true;
         }
     }
@@ -49,6 +47,8 @@ public class SkillNode : MonoBehaviour
         if(!isLocked && currentLevel < skillSO.skillMaxLevel) {
             currentLevel++;
             UpdateUI();
+
+            FindFirstObjectByType<PlayerController>().UpdateStat(skillSO);
 
             if(IsUnlocked()) {
                 UnlockLinkedNodes();
@@ -64,17 +64,15 @@ public class SkillNode : MonoBehaviour
     }
 
     private void UnlockNode() {
-        if (CheckLinkedNodes()) {
+        if (LinkedNodesUnlocked())
             isLocked = false;
-            UpdateUI();
-        }
-        else {
+        else
             isLocked = true;
-            UpdateUI();
-        }
+        
+        UpdateUI();
     }
 
-    public bool CheckLinkedNodes() {
+    public bool LinkedNodesUnlocked() {
         foreach(SkillNode skl in nodeRequired) {
             if (!skl.IsUnlocked())
                 return false;
