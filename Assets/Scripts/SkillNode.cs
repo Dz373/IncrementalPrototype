@@ -51,7 +51,6 @@ public class SkillNode : MonoBehaviour
             UpdateUI();
 
             skillManager.UpdateStat(skillSO);
-            skillManager.totalSkillPoints -= skillSO.skillCost;
 
             if(IsUnlocked()) {
                 UnlockLinkedNodes();
