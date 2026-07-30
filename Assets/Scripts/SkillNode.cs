@@ -8,22 +8,29 @@ public class SkillNode : MonoBehaviour
     public int currentLevel;
     public SkillSO skillSO;
 
-    public bool isLocked;
+    private bool isLocked;
     public List<SkillNode> nodeUnlock;
     public List<SkillNode> nodeRequired;
 
-    [Header("Node Referenecs")]
+    [Header("Node References")]
     [SerializeField] private TextMeshProUGUI skillLevelText;
     [SerializeField] private Image skillIcon;
     [SerializeField] private Button skillButton;
     private SkillTreeManager skillManager;
 
     private void Start() {
+        skillManager = FindFirstObjectByType<SkillTreeManager>();
+
         foreach (SkillNode skl in nodeUnlock) {
+            if (nodeRequired.Contains(skl)) {
+                Debug.Log(skl + " already contains " + this);
+                return;
+            }
+
             skl.nodeRequired.Add(this);
             skl.UnlockNode();
+            LinkNode(skl.gameObject);
         }
-        skillManager = FindFirstObjectByType<SkillTreeManager>();
     }
 
     private void OnValidate() {
@@ -85,5 +92,15 @@ public class SkillNode : MonoBehaviour
 
     public bool IsUnlocked() {
         return currentLevel == skillSO.skillMaxLevel;
+    }
+
+    private void LinkNode(GameObject node) {
+        GameObject link = Instantiate(skillManager.nodeLink, transform);
+
+        Vector2 direction = (Vector2)node.transform.position - (Vector2)transform.position;
+        link.transform.right = direction;
+
+        RectTransform rectTransform = link.GetComponent<RectTransform>();
+        rectTransform.sizeDelta = new Vector2(direction.magnitude, rectTransform.sizeDelta.y);
     }
 }

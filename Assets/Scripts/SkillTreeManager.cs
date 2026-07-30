@@ -6,7 +6,9 @@ public class SkillTreeManager : MonoBehaviour
 {
     public int totalSkillPoints;
 
+    [Header("References")]
     [SerializeField] private TextMeshProUGUI skillPointText;
+    public GameObject nodeLink;
     private PlayerController player;
     private GameManager gameManager;
 
