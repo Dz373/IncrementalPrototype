@@ -2,15 +2,17 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Collections;
 
 public class SkillNode : MonoBehaviour
 {
     public int currentLevel;
-    public SkillSO skillSO;
+    public bool isLocked;
 
-    private bool isLocked;
+    public SkillSO skillSO;
     public List<SkillNode> nodeUnlock;
     public List<SkillNode> nodeRequired;
+    private Dictionary<SkillNode, SkillNodeLink> nodeLinks = new Dictionary<SkillNode, SkillNodeLink>();
 
     [Header("Node References")]
     [SerializeField] private TextMeshProUGUI skillLevelText;
@@ -29,7 +31,11 @@ public class SkillNode : MonoBehaviour
 
             skl.nodeRequired.Add(this);
             skl.UnlockNode();
-            LinkNode(skl.gameObject);
+
+            GameObject link = Instantiate(skillManager.nodeLink, transform);
+            SkillNodeLink script = link.GetComponent<SkillNodeLink>();
+            script.Instantiate(skl.gameObject, gameObject);
+            nodeLinks.Add(skl, script);
         }
     }
 
@@ -68,8 +74,14 @@ public class SkillNode : MonoBehaviour
 
     private void UnlockLinkedNodes() {
         foreach (SkillNode skl in nodeUnlock) {
-            skl.UnlockNode();
+            StartCoroutine(UnlockNodeTimer(skl));
         }
+    }
+
+    private IEnumerator UnlockNodeTimer(SkillNode skl) {
+        nodeLinks[skl].Unlock();
+        yield return new WaitForSeconds(0.5f);
+        skl.UnlockNode();
     }
 
     private void UnlockNode() {
@@ -92,15 +104,5 @@ public class SkillNode : MonoBehaviour
 
     public bool IsUnlocked() {
         return currentLevel == skillSO.skillMaxLevel;
-    }
-
-    private void LinkNode(GameObject node) {
-        GameObject link = Instantiate(skillManager.nodeLink, transform);
-
-        Vector2 direction = (Vector2)node.transform.position - (Vector2)transform.position;
-        link.transform.right = direction;
-
-        RectTransform rectTransform = link.GetComponent<RectTransform>();
-        rectTransform.sizeDelta = new Vector2(direction.magnitude, rectTransform.sizeDelta.y);
     }
 }
