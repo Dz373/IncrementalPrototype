@@ -7,13 +7,24 @@ public class PlayerController : MonoBehaviour
     public int atk;
     public int hp;
 
+    [Header("Script Variables")]
+    public bool canMove = true;
+
     [Header("Components")]
     [SerializeField] private Rigidbody2D rb;
 
     private Vector2 playerInput;
 
     private void Update() {
-        playerInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
+        if (canMove) {
+            playerInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
+        }
+        else {
+            playerInput = Vector2.zero;
+        }
+    }
+
+    private void FixedUpdate() {
         rb.linearVelocity = playerInput * mvSpd;
     }
 }

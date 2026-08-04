@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour
     public float time;
     public float currentTime;
 
+    [SerializeField] private PlayerController player;
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private CanvasGroup UIMenu;
 
@@ -22,10 +23,14 @@ public class GameManager : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            if(UIMenu.alpha == 0)
+            if(UIMenu.alpha == 0) {
+                player.canMove = false;
                 UIMenu.alpha = 1;
-            else
+            }
+            else {
+                player.canMove = true;
                 UIMenu.alpha = 0;
+            }
         }
     }
 

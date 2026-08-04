@@ -25,7 +25,7 @@ public class SkillTreeManager : MonoBehaviour
     }
 
     public void UpdateSkillPoints(int cost) {
-        totalSkillPoints -= cost;
+        totalSkillPoints += cost;
         skillPointText.text = totalSkillPoints.ToString();
     }
 
@@ -51,6 +51,6 @@ public class SkillTreeManager : MonoBehaviour
                 break;
         }
 
-        UpdateSkillPoints(skill.skillCost);
+        UpdateSkillPoints(-skill.skillCost);
     }
 }
