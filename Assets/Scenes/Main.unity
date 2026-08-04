@@ -943,6 +943,7 @@ MonoBehaviour:
   time: 5
   currentTime: 0
   timerText: {fileID: 376565699}
+  UIMenu: {fileID: 1773913400}
 --- !u!1001 &1124710702
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1574,6 +1575,7 @@ GameObject:
   - component: {fileID: 1773913398}
   - component: {fileID: 1773913397}
   - component: {fileID: 1773913396}
+  - component: {fileID: 1773913400}
   m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
@@ -1665,6 +1667,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!225 &1773913400
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1773913395}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1777233376
 GameObject:
   m_ObjectHideFlags: 0

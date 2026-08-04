@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     public float currentTime;
 
     [SerializeField] private TextMeshProUGUI timerText;
+    [SerializeField] private CanvasGroup UIMenu;
 
     private void Start() {
         currentTime = time;
@@ -18,6 +19,13 @@ public class GameManager : MonoBehaviour
 
         if (currentTime < 0) {
             currentTime = time;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            if(UIMenu.alpha == 0)
+                UIMenu.alpha = 1;
+            else
+                UIMenu.alpha = 0;
         }
     }
 

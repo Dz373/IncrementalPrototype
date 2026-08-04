@@ -48,9 +48,6 @@ public class UICamera : MonoBehaviour, IScrollHandler, IDragHandler {
         float minY = (viewSize.y - panelSize.y) * 0.5f;
         float maxY = (panelSize.y - viewSize.y) * 0.5f;
 
-        if (panelSize.x < viewSize.x) { minX = 0; maxX = 0; }
-        if (panelSize.y < viewSize.y) { minY = 0; maxY = 0; }
-
         Vector3 currentPos = rectTransform.localPosition;
         currentPos.x = Mathf.Clamp(currentPos.x, minX, maxX);
         currentPos.y = Mathf.Clamp(currentPos.y, minY, maxY);
