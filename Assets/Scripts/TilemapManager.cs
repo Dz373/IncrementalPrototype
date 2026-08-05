@@ -1,0 +1,141 @@
+using UnityEngine;
+using UnityEngine.Tilemaps;
+using System.Collections.Generic;
+
+public class TilemapManager : MonoBehaviour
+{
+    public Tilemap map;
+    [SerializeField] private Tilemap overlay;
+    [SerializeField] private Tilemap objectMap;
+
+    [SerializeField] private Tile greenOverlay;
+
+    [SerializeField] private List<TileSO> tileDataList;
+    private Dictionary<TileBase, TileSO> tileData;
+
+    private Vector3Int[] directions = { Vector3Int.right, Vector3Int.up, Vector3Int.left, Vector3Int.down };
+    private Dictionary<Vector3Int, int> tileCost;
+    private List<Vector3Int> movementTiles;
+
+
+    private void Awake() {
+        tileData = new Dictionary<TileBase, TileSO>();
+
+        foreach (var data in tileDataList) {
+            foreach (var tile in data.tiles) {
+                tileData.Add(tile, data);
+            }
+        }
+    }
+
+    public bool CanMoveToTile(Vector3Int v) {
+        if (!overlay.HasTile(v)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void ClearTiles() {
+        overlay.ClearAllTiles();
+    }
+
+    public void DisplayOverlay(PlayerController player) {
+        movementTiles = GetMoveTiles(player.pos, player.mvRange);
+
+        foreach (Vector3Int v in movementTiles) {
+            overlay.SetTile(v, greenOverlay);
+        }
+    }
+
+    private List<Vector3Int> GetMoveTiles(Vector3Int start, int range) {
+        Queue<Vector3Int> queue = new Queue<Vector3Int>();
+        tileCost = new Dictionary<Vector3Int, int>();
+
+        queue.Enqueue(start);
+        tileCost.Add(start, range);
+
+        while (queue.Count > 0) {
+            Vector3Int cur_tile = queue.Dequeue();
+            int cur_mv = tileCost[cur_tile];
+
+            foreach (Vector3Int dir in directions) {
+                Vector3Int new_tile = cur_tile + dir;
+
+                if (!IsValidTile(new_tile))
+                    continue;
+
+                int mv_cost = GetMoveCost(new_tile);
+                if (cur_mv < mv_cost)
+                    continue;
+
+                if (tileCost.ContainsKey(new_tile)) {
+                    if (cur_mv - mv_cost > tileCost[new_tile]) {
+                        tileCost[new_tile] = cur_mv - mv_cost;
+                        queue.Enqueue(new_tile);
+                    }
+                }
+                else {
+                    queue.Enqueue(new_tile);
+                    tileCost.Add(new_tile, cur_mv - mv_cost);
+                }
+            }
+        }
+
+        return new List<Vector3Int>(tileCost.Keys);
+    }
+
+    private bool IsValidTile(Vector3Int v) {
+        if (!map.HasTile(v))
+            return false;
+
+        if (objectMap.HasTile(v))
+            if (tileData[objectMap.GetTile(v)].noPass)
+                return false;
+
+        if (tileData[map.GetTile(v)].noPass)
+            return false;
+
+        return true;
+    }
+
+    public int GetMoveCost(Vector3Int v) {
+        int cost = tileData[map.GetTile(v)].mvCost;
+
+        if (objectMap.HasTile(v))
+            cost += tileData[objectMap.GetTile(v)].mvCost;
+
+        return cost;
+    }
+
+    public List<Vector3Int> FindMovePath(Vector3Int target, Vector3Int start) {
+        List<Vector3Int> path = new List<Vector3Int>();
+
+        Vector3Int cur = target;
+        path.Add(cur);
+
+        while (!cur.Equals(start)) {
+            int cost = tileCost[cur];
+            Vector3Int next_tile = cur;
+
+            foreach (Vector3Int dir in directions) {
+                if (!tileCost.ContainsKey(dir + cur))
+                    continue;
+
+                if (tileCost[dir + cur] > cost) {
+                    next_tile = dir + cur;
+                    cost = tileCost[dir + cur];
+                }
+            }
+
+            cur = next_tile;
+            path.Add(cur);
+        }
+
+        return path;
+    }
+
+    public Vector3Int GetWorldToCell(Vector3 v) {
+        return map.WorldToCell(v);
+    }
+}

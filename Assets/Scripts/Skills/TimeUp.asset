@@ -16,5 +16,5 @@ MonoBehaviour:
   skillMaxLevel: 5
   skillCost: 1
   skillModifier: 3
-  modifierAmount: 2
+  modifierAmount: 1
   skillIcon: {fileID: 6603039554270524123, guid: 1095188c708d2ff4e8056940ca603176, type: 3}

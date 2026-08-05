@@ -12,7 +12,7 @@ public class CursorController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        pos = gm.map.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+        pos = gm.map.GetWorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
         transform.position = pos;
     }

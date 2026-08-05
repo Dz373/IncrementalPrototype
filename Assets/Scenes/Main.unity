@@ -2091,7 +2091,7 @@ GameObject:
   - component: {fileID: 376565700}
   - component: {fileID: 376565699}
   m_Layer: 5
-  m_Name: Timer
+  m_Name: ActionDisplayCounter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2113,7 +2113,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 41, y: 488}
+  m_AnchoredPosition: {x: 39, y: 484}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &376565699
@@ -2136,7 +2136,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '00 : 00'
+  m_text: 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2163,8 +2163,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 48
+  m_fontSizeBase: 48
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2459,6 +2459,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 551765555}
+  - component: {fileID: 551765556}
   - component: {fileID: 551765554}
   m_Layer: 0
   m_Name: Grid
@@ -2497,6 +2498,26 @@ Transform:
   - {fileID: 990173068}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &551765556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 551765553}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 582293699c6cc46479288c3b0fdf8773, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  map: {fileID: 231315485}
+  overlay: {fileID: 990173070}
+  objectMap: {fileID: 632416717}
+  greenOverlay: {fileID: 11400000, guid: 395a6209a074fa04a8465125503d6c7f, type: 2}
+  tileDataList:
+  - {fileID: 11400000, guid: b7bcfdecbd0c21d4b99c18ec37a6f3d5, type: 2}
+  - {fileID: 11400000, guid: 53811a06caa0d5544b6078c9ff12081d, type: 2}
+  - {fileID: 11400000, guid: 94f11415293501b44b1f1bffc9589c48, type: 2}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -2754,7 +2775,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -685, y: 496}
+  m_AnchoredPosition: {x: -825, y: 495}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &636803763
@@ -2813,7 +2834,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 4
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -2989,16 +3010,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a6bba0fbab6420438f1f4d172409725, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  actions: 5
   player: {fileID: 1611384311}
   cursor: {fileID: 1639655423}
-  overlay: {fileID: 990173070}
-  map: {fileID: 231315485}
-  objectMap: {fileID: 632416717}
-  greenOverlay: {fileID: 11400000, guid: 395a6209a074fa04a8465125503d6c7f, type: 2}
-  tileDataList:
-  - {fileID: 11400000, guid: b7bcfdecbd0c21d4b99c18ec37a6f3d5, type: 2}
-  - {fileID: 11400000, guid: 53811a06caa0d5544b6078c9ff12081d, type: 2}
-  - {fileID: 11400000, guid: 94f11415293501b44b1f1bffc9589c48, type: 2}
+  map: {fileID: 551765556}
+  actionCounter: {fileID: 376565699}
 --- !u!1 &990173067
 GameObject:
   m_ObjectHideFlags: 0
@@ -3540,8 +3556,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 376565698}
   - {fileID: 636803762}
+  - {fileID: 376565698}
   m_Father: {fileID: 1773913399}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -3915,7 +3931,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1662942489
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3970,7 +3986,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1773913399}
-  - component: {fileID: 1773913400}
   - component: {fileID: 1773913398}
   - component: {fileID: 1773913397}
   - component: {fileID: 1773913396}
@@ -4065,18 +4080,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!225 &1773913400
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1773913395}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 0
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1 &1921864517
 GameObject:
   m_ObjectHideFlags: 0
