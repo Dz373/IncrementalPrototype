@@ -40,11 +40,11 @@ public class SkillTreeManager : MonoBehaviour
                 break;
 
             case Modifier.movementUp:
-                player.mvSpd += skill.modifierAmount;
+                player.mvRange += skill.modifierAmount;
                 break;
 
             case Modifier.timeUp:
-                gameManager.time += skill.modifierAmount;
+                //gameManager.time += skill.modifierAmount;
                 break;
 
             default:

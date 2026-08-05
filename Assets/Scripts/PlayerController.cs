@@ -1,30 +1,19 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("Stats")]
-    public int mvSpd;
+    public int mvRange;
     public int atk;
     public int hp;
-
-    [Header("Script Variables")]
-    public bool canMove = true;
+    public Vector3Int pos;
 
     [Header("Components")]
-    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private PathFollower pathFollow;
 
-    private Vector2 playerInput;
-
-    private void Update() {
-        if (canMove) {
-            playerInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
-        }
-        else {
-            playerInput = Vector2.zero;
-        }
-    }
-
-    private void FixedUpdate() {
-        rb.linearVelocity = playerInput * mvSpd;
+    public void Move(List<Vector3Int> path, Vector3Int target) {
+        pathFollow.SetNewPath(path);
+        pos = target;
     }
 }
