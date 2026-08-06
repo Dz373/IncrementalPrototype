@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -39,7 +40,7 @@ public class GameManager : MonoBehaviour {
         UpdateActions(-1);
         
         if (actions <= 0){
-            Debug.Log("end");
+            SceneManager.LoadScene(0);
         }
         else {
             map.DisplayOverlay(player);
