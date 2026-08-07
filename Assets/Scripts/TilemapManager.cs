@@ -41,7 +41,7 @@ public class TilemapManager : MonoBehaviour
     }
 
     public void DisplayOverlay(PlayerController player) {
-        movementTiles = GetMoveTiles(player.pos, player.mvRange);
+        movementTiles = GetMoveTiles(player.pos, player.stats.mvRange);
 
         foreach (Vector3Int v in movementTiles) {
             overlay.SetTile(v, greenOverlay);

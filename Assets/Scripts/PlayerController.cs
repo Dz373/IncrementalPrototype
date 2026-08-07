@@ -3,10 +3,7 @@ using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("Stats")]
-    public int mvRange;
-    public int atk;
-    public int hp;
+    public PlayerStats stats;
     public Vector3Int pos;
 
     [Header("Components")]
@@ -16,4 +13,12 @@ public class PlayerController : MonoBehaviour
         pathFollow.SetNewPath(path);
         pos = target;
     }
+}
+
+[System.Serializable]
+public class PlayerStats {
+    public int mvRange = 3;
+    public int atk = 1;
+    public int hp = 3;
+
 }

@@ -1,11 +1,13 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class GameManager : MonoBehaviour {
 
     [Header("Game Variables")]
     public int actions;
+    public GameData data;
     
     [Header("Managers")]
     public PlayerController player;
@@ -15,9 +17,17 @@ public class GameManager : MonoBehaviour {
     [Header("Misc Objects")]
     [SerializeField] private TextMeshProUGUI actionCounter;
 
+    private string savePath;
+    private void Awake() {
+        savePath = Path.Combine(Application.persistentDataPath, "savefile.json");
+    }
+
     private void Start() {
-        map.DisplayOverlay(player);
+        LoadGame();
+
         actionCounter.text = actions.ToString();
+
+        map.DisplayOverlay(player);
     }
 
     private void Update() {
@@ -53,4 +63,37 @@ public class GameManager : MonoBehaviour {
 
         actionCounter.text = actions.ToString();
     }
+
+    
+    private void SaveGame() {
+        string json = JsonUtility.ToJson(data, true);
+
+        File.WriteAllText(savePath, json);
+    }
+
+    private void LoadGame() {
+        if (File.Exists(savePath)) {
+            string json = File.ReadAllText(savePath);
+            data = JsonUtility.FromJson<GameData>(json);
+            
+            Debug.Log("Loaded existing GameData");
+        }
+        else {
+            data = new GameData();
+            data.pStats = new PlayerStats();
+            
+            Debug.Log("No file path: new GameData");
+        }
+
+        actions = data.actions;
+        player.stats = data.pStats;
+    }
+    
+}
+
+[System.Serializable]
+public class GameData {
+    public int actions = 5;
+
+    public PlayerStats pStats;
 }
