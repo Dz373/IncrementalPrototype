@@ -27,4 +27,8 @@ public class SkillNodeLink : MonoBehaviour
     public void Unlock() {
         unlocked = true;
     }
+
+    public void OnLoadUnlock() {
+        highlight.localScale.Set(0, 1, 1);
+    }
 }

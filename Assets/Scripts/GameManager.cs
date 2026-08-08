@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 using System.IO;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
 
@@ -20,11 +21,10 @@ public class GameManager : MonoBehaviour {
     private string savePath;
     private void Awake() {
         savePath = Path.Combine(Application.persistentDataPath, "savefile.json");
+        LoadGame();
     }
 
     private void Start() {
-        LoadGame();
-
         actionCounter.text = actions.ToString();
 
         map.DisplayOverlay(player);
@@ -78,22 +78,28 @@ public class GameManager : MonoBehaviour {
             
             Debug.Log("Loaded existing GameData");
         }
-        else {
-            data = new GameData();
-            data.pStats = new PlayerStats();
-            
-            Debug.Log("No file path: new GameData");
-        }
+        else
+            data = NewGame();
 
         actions = data.actions;
         player.stats = data.pStats;
     }
-    
+
+    static public GameData NewGame() {
+        GameData gameData = new GameData();
+        gameData.pStats = new PlayerStats();
+        gameData.skillNodeLevels = new List<int>();
+
+        return gameData;
+    }
 }
 
 [System.Serializable]
 public class GameData {
     public int actions = 5;
+    public int totalSkillPoints = 10;
 
     public PlayerStats pStats;
+
+    public List<int> skillNodeLevels;
 }

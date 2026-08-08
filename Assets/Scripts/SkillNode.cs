@@ -14,14 +14,18 @@ public class SkillNode : MonoBehaviour
     public List<SkillNode> nodeRequired;
     private Dictionary<SkillNode, SkillNodeLink> nodeLinks = new Dictionary<SkillNode, SkillNodeLink>();
 
+    public int id;
+
     [Header("Node References")]
     [SerializeField] private TextMeshProUGUI skillLevelText;
     [SerializeField] private Image skillIcon;
     [SerializeField] private Button skillButton;
     private SkillTreeManager skillManager;
 
-    private void Start() {
+    private void Awake() {
         skillManager = FindFirstObjectByType<SkillTreeManager>();
+
+        skillButton.onClick.AddListener(() => skillManager.UpdateStat(skillSO));
 
         foreach (SkillNode skl in nodeUnlock) {
             if (nodeRequired.Contains(skl)) {
@@ -63,10 +67,23 @@ public class SkillNode : MonoBehaviour
             currentLevel++;
             UpdateUI();
 
-            skillManager.UpdateStat(skillSO);
-
             if(IsUnlocked()) {
                 UnlockLinkedNodes();
+                skillButton.interactable = false;
+            }
+        }
+    }
+
+    public void OnLoadUpgradeSkill(int level) {
+        if(level > 0) {
+            currentLevel = level;
+            UpdateUI();
+
+            if (IsUnlocked()) {
+                foreach (SkillNode skl in nodeUnlock) {
+                    nodeLinks[skl].OnLoadUnlock();
+                    skl.UnlockNode();
+                }
                 skillButton.interactable = false;
             }
         }

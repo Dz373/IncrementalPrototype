@@ -15,13 +15,25 @@ public class SkillTreeManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private TextMeshProUGUI skillPointText;
     public GameObject nodeLink;
+    private SkillNode[] nodes;
 
     private void Awake() {
         savePath = Path.Combine(Application.persistentDataPath, "savefile.json");
+
+        //LoadGame();
+        data = GameManager.NewGame();
     }
 
     private void Start() {
-        NewGame();
+        skillPointText.text = totalSkillPoints.ToString();
+
+        nodes = GetComponentsInChildren<SkillNode>();
+        for (int i = 0; i < nodes.Length; i++) {
+            nodes[i].id = i;
+
+            if(i < data.skillNodeLevels.Count)
+                nodes[i].OnLoadUpgradeSkill(data.skillNodeLevels[i]);
+        }
     }
 
     public bool CanSpendSkillPoints(int cost) {
@@ -37,9 +49,16 @@ public class SkillTreeManager : MonoBehaviour
     }
 
     public void UpdateStat(SkillSO skill) {
+        if (!CanSpendSkillPoints(skill.skillCost))
+            return;
+
         switch (skill.skillModifier) {
             case Modifier.timeUp:
-                data.actions++;
+                data.actions += skill.modifierAmount;
+                break;
+
+            case Modifier.movementUp:
+                data.pStats.mvRange += skill.modifierAmount;
                 break;
             
             default:
@@ -47,11 +66,25 @@ public class SkillTreeManager : MonoBehaviour
         }
 
         UpdateSkillPoints(-skill.skillCost);
+
+        Debug.Log(skill.skillModifier);
     }
 
     private void SaveGame() {
-        string json = JsonUtility.ToJson(data, true);
+        if (data.skillNodeLevels.Count == 0) {
+            for (int i = 0; i < nodes.Length; i++) {
+                data.skillNodeLevels.Add(nodes[i].currentLevel);
+            }
+        }
+        else {
+            for (int i = 0; i < nodes.Length; i++) {
+                data.skillNodeLevels[i] = nodes[i].currentLevel;
+            }
+        }
 
+        data.totalSkillPoints = totalSkillPoints;
+
+        string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(savePath, json);
     }
 
@@ -59,22 +92,16 @@ public class SkillTreeManager : MonoBehaviour
         if (File.Exists(savePath)) {
             string json = File.ReadAllText(savePath);
             data = JsonUtility.FromJson<GameData>(json);
-
-            Debug.Log("Loaded existing GameData");
         }
         else
-            NewGame();
+            data = GameManager.NewGame();
+
+        totalSkillPoints = data.totalSkillPoints;
     }
 
-    private void NewGame() {
-        data = new GameData();
-        data.pStats = new PlayerStats();
-
-        Debug.Log("No file path: new GameData");
-    }
 
     public void PlayGame() {
         SaveGame();
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 }
