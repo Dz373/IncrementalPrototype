@@ -20,8 +20,8 @@ public class SkillTreeManager : MonoBehaviour
     private void Awake() {
         savePath = Path.Combine(Application.persistentDataPath, "savefile.json");
 
-        //LoadGame();
-        data = GameManager.NewGame();
+        LoadGame();
+        //data = GameManager.NewGame();
     }
 
     private void Start() {
@@ -102,6 +102,6 @@ public class SkillTreeManager : MonoBehaviour
 
     public void PlayGame() {
         SaveGame();
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(0);
     }
 }
