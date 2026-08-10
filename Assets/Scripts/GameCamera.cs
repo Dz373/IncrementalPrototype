@@ -2,35 +2,61 @@ using UnityEngine;
 
 public class GameCamera : MonoBehaviour
 {
-    [SerializeField] private Camera cam;
+    [Header("Scroll")]
     [SerializeField] private float smoothSpeed = 5f;
+    [SerializeField] private float padding;
 
-    private Bounds bounds;
+    [Header("Zoom")]
+    [SerializeField] private float zoomStep = 2f;
+    [SerializeField] private float minZoom = 3f;
+    [SerializeField] private float maxZoom = 20f;
+    [SerializeField] private float zoomSpeed = 5f;
+    private float targetZoom;
+    private float targetPad;
+
+    [Header("Other")]
+    [SerializeField] private Camera cam;
+    [SerializeField] private CursorController cursor;
+    private BoundsInt mapBounds;
 
     private void Start() {
-        BoundsInt mapBounds = FindFirstObjectByType<TilemapManager>().GetMapBounds();
-        bounds.SetMinMax(
-            new Vector3(
-                mapBounds.xMin + cam.orthographicSize * cam.aspect, 
-                mapBounds.yMin + cam.orthographicSize), 
-            new Vector3(
-                mapBounds.xMax - cam.orthographicSize * cam.aspect, 
-                mapBounds.yMax - cam.orthographicSize)
-            );
-        
+        mapBounds = FindFirstObjectByType<TilemapManager>().GetMapBounds();
+
+        targetZoom = cam.orthographicSize;
+        targetPad = padding;
     }
 
-    private void LateUpdate() {
-        Vector3 mouseScreenPos = Input.mousePosition;
-        mouseScreenPos.z = Mathf.Abs(transform.position.z);
+    private void Update() {
+        float scrollData = Input.GetAxis("Mouse ScrollWheel");
+        if (scrollData != 0f) {
+            targetZoom -= zoomStep*Mathf.Sign(scrollData);
+            targetZoom = Mathf.Clamp(targetZoom, minZoom, maxZoom);
 
+            targetPad = padding * (targetZoom / 5);
+        }
+
+        cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, targetZoom, Time.deltaTime * zoomSpeed);
+
+        Vector3 mouseScreenPos = Input.mousePosition;
         Vector3 mouseWorldPos = cam.ScreenToWorldPoint(mouseScreenPos);
-        Vector3 targetPos = new Vector3(mouseWorldPos.x, mouseWorldPos.y, transform.position.z);
-        
-        Vector3 currentPos = Vector3.Lerp(transform.position, targetPos, smoothSpeed * Time.deltaTime); ;
-        currentPos.x = Mathf.Clamp(currentPos.x, bounds.min.x, bounds.max.x);
-        currentPos.y = Mathf.Clamp(currentPos.y, bounds.min.y, bounds.max.y);
-        
-        transform.position = currentPos;
+        if (CanMove(mouseWorldPos)) {
+            Vector3 targetPos = new Vector3(mouseWorldPos.x, mouseWorldPos.y, transform.position.z);
+
+            Vector3 currentPos = Vector3.Lerp(transform.position, targetPos, smoothSpeed * Time.deltaTime); ;
+            currentPos.x = Mathf.Clamp(currentPos.x, mapBounds.xMin + cam.orthographicSize * cam.aspect, mapBounds.xMax - cam.orthographicSize * cam.aspect);
+            currentPos.y = Mathf.Clamp(currentPos.y, mapBounds.yMin + cam.orthographicSize, mapBounds.yMax - cam.orthographicSize);
+
+            transform.position = currentPos;
+        }
+    }
+
+    private bool CanMove(Vector3 mousePos) {
+        Vector3 cursorPos = mousePos - transform.position;
+        float padX = cam.orthographicSize * cam.aspect - targetPad;
+        float padY = cam.orthographicSize - targetPad;
+
+        if (cursorPos.x < padX && cursorPos.x > -padX && cursorPos.y < padY && cursorPos.y > -padY)
+            return false;
+        return true;
     }
 }
