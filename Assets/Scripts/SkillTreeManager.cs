@@ -99,7 +99,6 @@ public class SkillTreeManager : MonoBehaviour
         totalSkillPoints = data.totalSkillPoints;
     }
 
-
     public void PlayGame() {
         SaveGame();
         SceneManager.LoadScene(0);

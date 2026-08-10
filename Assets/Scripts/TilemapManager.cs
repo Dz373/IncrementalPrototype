@@ -138,4 +138,9 @@ public class TilemapManager : MonoBehaviour
     public Vector3Int GetWorldToCell(Vector3 v) {
         return map.WorldToCell(v);
     }
+
+    public BoundsInt GetMapBounds() {
+        map.CompressBounds();
+        return map.cellBounds;
+    }
 }
