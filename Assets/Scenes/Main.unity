@@ -8656,12 +8656,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   smoothSpeed: 1.5
   padding: 2.5
+  canMove: 1
   zoomStep: 2
   minZoom: 3
   maxZoom: 9
   zoomSpeed: 10
   cam: {fileID: 519420031}
-  cursor: {fileID: 1639655423}
 --- !u!1 &551765553
 GameObject:
   m_ObjectHideFlags: 0
@@ -8726,6 +8726,7 @@ MonoBehaviour:
   overlay: {fileID: 990173070}
   objectMap: {fileID: 632416717}
   greenOverlay: {fileID: 11400000, guid: 395a6209a074fa04a8465125503d6c7f, type: 2}
+  redOverlay: {fileID: 11400000, guid: 55174707765d58847af80f4b275d812a, type: 2}
   tileDataList:
   - {fileID: 11400000, guid: b7bcfdecbd0c21d4b99c18ec37a6f3d5, type: 2}
   - {fileID: 11400000, guid: 53811a06caa0d5544b6078c9ff12081d, type: 2}
@@ -9070,6 +9071,8 @@ MonoBehaviour:
       mvRange: 3
       atk: 1
       hp: 3
+      minAtkRange: 2
+      maxAtkRange: 3
     skillNodeLevels: 
   player: {fileID: 1611384311}
   cursor: {fileID: 1639655423}
@@ -9728,6 +9731,8 @@ MonoBehaviour:
     mvRange: 5
     atk: 1
     hp: 3
+    minAtkRange: 2
+    maxAtkRange: 3
   pos: {x: 0, y: 0, z: 0}
   pathFollow: {fileID: 1611384310}
 --- !u!1 &1639655420

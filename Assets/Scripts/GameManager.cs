@@ -23,13 +23,14 @@ public class GameManager : MonoBehaviour {
     private void Awake() {
         savePath = Path.Combine(Application.persistentDataPath, "savefile.json");
 
-        LoadGame();
-        //data = GameManager.NewGame();
+        //LoadGame();
+        data = NewGame();
     }
 
     private void Start() {
         actionCounter.text = actions.ToString();
-        map.DisplayOverlay(player);
+        //map.DisplayOverlay(player);
+        map.DisplayAtkOverlay(player);
     }
 
     private void Update() {
@@ -60,6 +61,7 @@ public class GameManager : MonoBehaviour {
         }
         else {
             map.DisplayOverlay(player);
+            map.DisplayAtkOverlay(player);
         }
     }
 

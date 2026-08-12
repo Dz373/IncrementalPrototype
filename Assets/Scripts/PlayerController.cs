@@ -21,4 +21,6 @@ public class PlayerStats {
     public int atk = 1;
     public int hp = 3;
 
+    public int minAtkRange = 2;
+    public int maxAtkRange = 3;
 }

@@ -9,6 +9,7 @@ public class TilemapManager : MonoBehaviour
     [SerializeField] private Tilemap objectMap;
 
     [SerializeField] private Tile greenOverlay;
+    [SerializeField] private Tile redOverlay;
 
     [SerializeField] private List<TileSO> tileDataList;
     private Dictionary<TileBase, TileSO> tileData;
@@ -16,7 +17,7 @@ public class TilemapManager : MonoBehaviour
     private Vector3Int[] directions = { Vector3Int.right, Vector3Int.up, Vector3Int.left, Vector3Int.down };
     private Dictionary<Vector3Int, int> tileCost;
     private List<Vector3Int> movementTiles;
-
+    private List<Vector3Int> attackTiles;
 
     private void Awake() {
         tileData = new Dictionary<TileBase, TileSO>();
@@ -29,10 +30,8 @@ public class TilemapManager : MonoBehaviour
     }
 
     public bool CanMoveToTile(Vector3Int v) {
-        if (!overlay.HasTile(v)) {
+        if (!overlay.HasTile(v))
             return false;
-        }
-
         return true;
     }
 
@@ -45,6 +44,14 @@ public class TilemapManager : MonoBehaviour
 
         foreach (Vector3Int v in movementTiles) {
             overlay.SetTile(v, greenOverlay);
+        }
+    }
+    public void DisplayAtkOverlay(PlayerController player) {
+        attackTiles = GetAllAtkTiles(player.stats);
+
+        foreach (Vector3Int v in attackTiles) {
+            if(!overlay.HasTile(v))
+                overlay.SetTile(v, redOverlay);
         }
     }
 
@@ -83,6 +90,36 @@ public class TilemapManager : MonoBehaviour
         }
 
         return new List<Vector3Int>(tileCost.Keys);
+    }
+
+    private List<Vector3Int> GetAllAtkTiles(PlayerStats stats) {
+        List<Vector3Int> atkRange = new List<Vector3Int>();
+        
+        movementTiles = new List<Vector3Int>();
+        movementTiles.Add(new Vector3Int(0, 0, 0));
+        
+        foreach (Vector3Int tile in movementTiles) {
+            foreach (Vector3Int atk in GetAtkTiles(tile, stats.minAtkRange, stats.maxAtkRange)) {
+                if (!atkRange.Contains(atk))
+                    atkRange.Add(atk);
+            }
+        }
+
+        return atkRange;
+    }
+    private List<Vector3Int> GetAtkTiles(Vector3Int tile, int min, int max) {
+        List<Vector3Int> tilesInRange = new List<Vector3Int>();
+        for (int x = -max; x <= max; x++) {
+            for (int y = -max; y <= max; y++) {
+                int dis = Mathf.Abs(x) + Mathf.Abs(y);
+                if (dis <= max && dis >= min) {
+                    Vector3Int currentPos = new Vector3Int(tile.x + x, tile.y + y, tile.z);
+                    tilesInRange.Add(currentPos);
+                }
+            }
+        }
+
+        return tilesInRange;
     }
 
     private bool IsValidTile(Vector3Int v) {

@@ -5,6 +5,7 @@ public class GameCamera : MonoBehaviour
     [Header("Scroll")]
     [SerializeField] private float smoothSpeed = 5f;
     [SerializeField] private float padding;
+    public bool canMove;
 
     [Header("Zoom")]
     [SerializeField] private float zoomStep = 2f;
@@ -16,7 +17,6 @@ public class GameCamera : MonoBehaviour
 
     [Header("Other")]
     [SerializeField] private Camera cam;
-    [SerializeField] private CursorController cursor;
     private BoundsInt mapBounds;
 
     private void Start() {
@@ -51,6 +51,9 @@ public class GameCamera : MonoBehaviour
     }
 
     private bool CanMove(Vector3 mousePos) {
+        if (!canMove)
+            return false;
+
         Vector3 cursorPos = mousePos - transform.position;
         float padX = cam.orthographicSize * cam.aspect - targetPad;
         float padY = cam.orthographicSize - targetPad;
