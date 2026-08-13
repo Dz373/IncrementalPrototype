@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour {
     public int actions;
     public ActionPhase phase;
     public GameData data;
+    private Vector3Int playerCurPos;
     
     [Header("Managers")]
     public PlayerController player;
@@ -54,6 +55,7 @@ public class GameManager : MonoBehaviour {
                 case ActionPhase.SelectMoveTile:
                     if (!target.Equals(player.pos) && map.CanSelectTile(target, phase)) {
                         map.ClearTiles();
+                        playerCurPos = player.pos;
                         player.Move(map.FindMovePath(target, player.pos), target);
                     }
                     break;
@@ -71,11 +73,12 @@ public class GameManager : MonoBehaviour {
         }
 
         if (Input.GetMouseButtonDown(1)) {
-            Vector3Int target = cursor.pos;
-
             switch (phase) {
-                case ActionPhase.SelectMoveTile:
-                    
+                case ActionPhase.SelectAttackTile:
+                    player.InstantMove(playerCurPos);
+                    map.DisplayOverlay();
+                    map.DisplayAtkOverlay();
+                    phase = ActionPhase.SelectMoveTile;
                     break;
             }
         }

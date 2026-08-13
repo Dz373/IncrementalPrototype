@@ -15,6 +15,11 @@ public class PlayerController : MonoBehaviour
         pathFollow.SetNewPath(path);
         pos = target;
     }
+
+    public void InstantMove(Vector3Int target) {
+        pos = target;
+        transform.position = target;
+    }
 }
 
 [System.Serializable]

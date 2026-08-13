@@ -11,7 +11,6 @@ public class TilemapManager : MonoBehaviour
     [SerializeField] private Tile greenOverlay;
     [SerializeField] private Tile redOverlay;
 
-    [SerializeField] private List<TileSO> tileDataList;
     private Dictionary<TileBase, TileSO> tileData;
 
     private Vector3Int[] directions = { Vector3Int.right, Vector3Int.up, Vector3Int.left, Vector3Int.down };
@@ -24,8 +23,9 @@ public class TilemapManager : MonoBehaviour
     private void Awake() {
         tileData = new Dictionary<TileBase, TileSO>();
 
-        foreach (var data in tileDataList) {
-            foreach (var tile in data.tiles) {
+        TileSO[] tiles = Resources.LoadAll<TileSO>("TileData");
+        foreach (TileSO data in tiles) {
+            foreach (TileBase tile in data.tiles) {
                 tileData.Add(tile, data);
             }
         }
