@@ -8731,6 +8731,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b7bcfdecbd0c21d4b99c18ec37a6f3d5, type: 2}
   - {fileID: 11400000, guid: 53811a06caa0d5544b6078c9ff12081d, type: 2}
   - {fileID: 11400000, guid: 94f11415293501b44b1f1bffc9589c48, type: 2}
+  player: {fileID: 1611384311}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -9064,6 +9065,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actions: 5
+  phase: 0
   data:
     actions: 5
     totalSkillPoints: 10
@@ -9735,6 +9737,7 @@ MonoBehaviour:
     maxAtkRange: 3
   pos: {x: 0, y: 0, z: 0}
   pathFollow: {fileID: 1611384310}
+  gm: {fileID: 831125786}
 --- !u!1 &1639655420
 GameObject:
   m_ObjectHideFlags: 0

@@ -23,7 +23,7 @@ public class PathFollower : MonoBehaviour {
         if (index < 0) {
             finish_path = true;
 
-            FindFirstObjectByType<GameManager>().NextMove();
+            FindFirstObjectByType<GameManager>().FinishMoving();
         }
     }
 

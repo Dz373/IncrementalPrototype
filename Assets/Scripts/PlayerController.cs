@@ -8,8 +8,10 @@ public class PlayerController : MonoBehaviour
 
     [Header("Components")]
     [SerializeField] private PathFollower pathFollow;
+    [SerializeField] private GameManager gm;
 
     public void Move(List<Vector3Int> path, Vector3Int target) {
+        gm.phase = ActionPhase.Moving;
         pathFollow.SetNewPath(path);
         pos = target;
     }
@@ -21,6 +23,6 @@ public class PlayerStats {
     public int atk = 1;
     public int hp = 3;
 
-    public int minAtkRange = 2;
-    public int maxAtkRange = 3;
+    public int minAtkRange = 1;
+    public int maxAtkRange = 1;
 }

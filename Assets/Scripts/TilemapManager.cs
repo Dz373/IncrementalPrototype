@@ -19,6 +19,8 @@ public class TilemapManager : MonoBehaviour
     private List<Vector3Int> movementTiles;
     private List<Vector3Int> attackTiles;
 
+    [SerializeField] private PlayerController player;
+
     private void Awake() {
         tileData = new Dictionary<TileBase, TileSO>();
 
@@ -29,30 +31,46 @@ public class TilemapManager : MonoBehaviour
         }
     }
 
-    public bool CanMoveToTile(Vector3Int v) {
-        if (!overlay.HasTile(v))
-            return false;
-        return true;
+    public bool CanSelectTile(Vector3Int v, ActionPhase phase) {
+        switch (phase) {
+            case ActionPhase.SelectMoveTile:
+                if (movementTiles.Contains(v))
+                    return true;
+                break;
+
+            case ActionPhase.SelectAttackTile:
+                if (GetAtkTiles(player.pos, player.stats.minAtkRange, player.stats.maxAtkRange).Contains(v))
+                    return true;
+                break;
+        }
+        return false;
     }
 
     public void ClearTiles() {
         overlay.ClearAllTiles();
     }
 
-    public void DisplayOverlay(PlayerController player) {
-        movementTiles = GetMoveTiles(player.pos, player.stats.mvRange);
-
+    public void DisplayOverlay() {
         foreach (Vector3Int v in movementTiles) {
             overlay.SetTile(v, greenOverlay);
         }
     }
-    public void DisplayAtkOverlay(PlayerController player) {
-        attackTiles = GetAllAtkTiles(player.stats);
-
+    public void DisplayAtkOverlay() {
         foreach (Vector3Int v in attackTiles) {
             if(!overlay.HasTile(v))
                 overlay.SetTile(v, redOverlay);
         }
+    }
+    public void DisplayAtkRangeOfTile(Vector3Int tile) {
+        foreach (Vector3Int v in GetAtkTiles(tile, player.stats.minAtkRange, player.stats.maxAtkRange)) {
+            overlay.SetTile(v, redOverlay);
+        }
+    }
+
+    public void SetTilesInRange() {
+        ClearTiles();
+        movementTiles = GetMoveTiles(player.pos, player.stats.mvRange);
+        attackTiles = GetAllAtkTiles(player.stats);
     }
 
     private List<Vector3Int> GetMoveTiles(Vector3Int start, int range) {
@@ -94,17 +112,12 @@ public class TilemapManager : MonoBehaviour
 
     private List<Vector3Int> GetAllAtkTiles(PlayerStats stats) {
         List<Vector3Int> atkRange = new List<Vector3Int>();
-        
-        movementTiles = new List<Vector3Int>();
-        movementTiles.Add(new Vector3Int(0, 0, 0));
-        
         foreach (Vector3Int tile in movementTiles) {
             foreach (Vector3Int atk in GetAtkTiles(tile, stats.minAtkRange, stats.maxAtkRange)) {
                 if (!atkRange.Contains(atk))
                     atkRange.Add(atk);
             }
         }
-
         return atkRange;
     }
     private List<Vector3Int> GetAtkTiles(Vector3Int tile, int min, int max) {
@@ -118,7 +131,6 @@ public class TilemapManager : MonoBehaviour
                 }
             }
         }
-
         return tilesInRange;
     }
 

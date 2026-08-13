@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour {
 
     [Header("Game Variables")]
     public int actions;
+    public ActionPhase phase;
     public GameData data;
     
     [Header("Managers")]
@@ -25,12 +26,15 @@ public class GameManager : MonoBehaviour {
 
         //LoadGame();
         data = NewGame();
+        player.stats = data.pStats;
     }
 
     private void Start() {
         actionCounter.text = actions.ToString();
-        //map.DisplayOverlay(player);
-        map.DisplayAtkOverlay(player);
+
+        map.SetTilesInRange();
+        map.DisplayOverlay();
+        map.DisplayAtkOverlay();
     }
 
     private void Update() {
@@ -45,24 +49,42 @@ public class GameManager : MonoBehaviour {
 
         if (Input.GetMouseButtonDown(0)) {
             Vector3Int target = cursor.pos;
-            
-            if (!target.Equals(player.pos) && map.CanMoveToTile(target)) {
-                map.ClearTiles();
-                player.Move(map.FindMovePath(target, player.pos), target);
+
+            switch (phase) {
+                case ActionPhase.SelectMoveTile:
+                    if (!target.Equals(player.pos) && map.CanSelectTile(target, phase)) {
+                        map.ClearTiles();
+                        player.Move(map.FindMovePath(target, player.pos), target);
+                    }
+                    break;
+
+                case ActionPhase.SelectAttackTile:
+                    if (map.CanSelectTile(target, phase)) {
+                        map.SetTilesInRange();
+                        map.DisplayOverlay();
+                        map.DisplayAtkOverlay();
+                        
+                        UpdateActions();
+                    }
+                    break;
+            }
+        }
+
+        if (Input.GetMouseButtonDown(1)) {
+            Vector3Int target = cursor.pos;
+
+            switch (phase) {
+                case ActionPhase.SelectMoveTile:
+                    
+                    break;
             }
         }
     }
 
-    public void NextMove() {
-        UpdateActions(-1);
-        
-        if (actions <= 0) {
-            EndGame();
-        }
-        else {
-            map.DisplayOverlay(player);
-            map.DisplayAtkOverlay(player);
-        }
+    public void FinishMoving() {
+        phase = ActionPhase.SelectAttackTile;
+
+        map.DisplayAtkRangeOfTile(player.pos);
     }
 
     public void EndGame() {
@@ -70,9 +92,14 @@ public class GameManager : MonoBehaviour {
         actionCounter.gameObject.SetActive(false);
     }
 
-    private void UpdateActions(int amount) {
-        actions += amount;
+    private void UpdateActions() {
+        actions--;
         actionCounter.text = actions.ToString();
+        phase = ActionPhase.SelectMoveTile;
+
+        if (actions <= 0) {
+            EndGame();
+        }
     }
 
     private void SaveGame() {
@@ -117,4 +144,11 @@ public class GameData {
     public PlayerStats pStats;
 
     public List<int> skillNodeLevels;
+}
+
+public enum ActionPhase {
+    SelectMoveTile,
+    Moving,
+    SelectAttackTile,
+    EndTurn
 }
